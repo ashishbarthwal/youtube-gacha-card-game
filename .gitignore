@@ -1,0 +1,16 @@
+# Dependencies (Vitest lands in WP1; the shipped app has none)
+node_modules/
+
+# Secrets — the YouTube API key never enters the repo
+.env
+.env.*
+*.local
+
+# Editor / OS cruft
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Test / build output
+coverage/
