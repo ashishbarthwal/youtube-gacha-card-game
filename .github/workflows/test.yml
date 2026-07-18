@@ -11,7 +11,12 @@ jobs:
         with:
           node-version: '24'
       - run: npm ci
-      - run: npm test
+      - run: npm run test:report
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: test-report
+          path: reports/junit.xml
 
 
 
