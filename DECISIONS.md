@@ -71,6 +71,12 @@ holds the shared in-memory `state` + `currentPool`/`addToCollection` so `banner`
 `banner → card` for a generic helper. `main.js` stays wiring-only; `banner` takes an
 `onPull` callback so it never imports the pull glue.
 
+**Live adapter normalizes `customUrl` to the `@handle` shape.** The API's
+`customUrl` is not guaranteed handle-shaped — older channels return a bare,
+lowercased vanity string ("mkbhd") where the modern format is "@mkbhd". The
+live adapter prepends `@` when missing so the `handle` field always matches the
+Channel typedef and the demo/sets adapters. Empty stays empty.
+
 **Local dev needs a JS-MIME static server, not `file://`.** ES modules are blocked over
 `file://`, and browsers reject module scripts served as `text/plain` (Python's
 `http.server` does this on Windows). `npx serve` is the recommended local server;

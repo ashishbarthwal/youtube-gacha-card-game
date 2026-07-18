@@ -5,6 +5,16 @@
 
 const YT_ENDPOINT = 'https://www.googleapis.com/youtube/v3/channels';
 
+/* customUrl is the API's handle field, but it is not guaranteed to be
+   handle-shaped: older channels return a bare, lowercased vanity string
+   ("mkbhd") while the modern format is "@mkbhd". Normalize to the "@name"
+   shape the Channel typedef promises, so live matches demo and sets. */
+function normalizeHandle(customUrl) {
+  const raw = String(customUrl ?? '').trim();
+  if (!raw) return '';
+  return raw.startsWith('@') ? raw : '@' + raw;
+}
+
 export async function fetchLiveChannel(resolved, apiKey) {
   const params = new URLSearchParams({ part: 'snippet,statistics', key: apiKey });
   if (resolved.kind === 'handle') params.set('forHandle', resolved.value);
@@ -31,7 +41,7 @@ export async function fetchLiveChannel(resolved, apiKey) {
   return {
     id: item.id,
     title: item.snippet?.title ?? 'Untitled channel',
-    handle: item.snippet?.customUrl ?? '',
+    handle: normalizeHandle(item.snippet?.customUrl),
     avatarUrl: item.snippet?.thumbnails?.default?.url ?? '',
     subscriberCount: stats.subscriberCount,
     hiddenSubscriberCount: Boolean(stats.hiddenSubscriberCount),
