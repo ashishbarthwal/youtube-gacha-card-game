@@ -3,6 +3,8 @@
 > Pull collectible trading cards minted from real YouTube channel stats.
 > A browser-based gacha game where a channel's numbers *become* the card.
 
+[![tests](https://github.com/ashishbarthwal/youtube-gacha-card-game/actions/workflows/test.yml/badge.svg)](https://github.com/ashishbarthwal/youtube-gacha-card-game/actions/workflows/test.yml)
+
 A fan tribute to [Wikigacha](https://en.wikipedia.org/wiki/Wikigacha) (Harusugi, Feb 2026),
 which plays the same trick with Wikipedia article metrics. This one does it with YouTube:
 subscriber count sets a card's rarity, view count drives its attack, video count its defense.
@@ -90,6 +92,20 @@ input (@handle | URL | UC id)
 ```
 
 Vanilla JS, ES modules, no framework, no bundler. Fonts: Anton / Space Grotesk / Space Mono.
+
+### Tests
+
+56 Vitest tests pin the pure core — every rarity boundary from both sides, hidden and
+malformed subscriber counts, monotonic stat scaling — and the gacha engine under a seeded
+RNG, so the drop-rate distribution is an exact assertion. CI runs them on every push
+(that's the badge above); each run uploads a self-contained HTML report as an artifact.
+
+```
+npm test              # run the suite
+npm run test:report   # also write reports/: JUnit XML + a double-clickable HTML report
+```
+
+Vitest is the repo's only dependency, dev-only — the shipped app has none.
 
 ---
 
