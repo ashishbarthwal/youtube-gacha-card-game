@@ -39,9 +39,15 @@ Rarer cards are weighted to pull less often, and hit ATK/DEF harder.
 
 ## Run it
 
-No build step, no dependencies. The whole game is one self-contained file.
+No build step, no dependencies — plain ES modules under `src/`, served as-is.
 
-- **Quickest:** open `youtube-gacha.html` in any modern browser (double-click works).
+- **Serve the folder** with any static server, then open `index.html`. The app is ES
+  modules, so `file://` double-click won't work (browsers block module imports over
+  `file://`), and the server must send a JavaScript MIME type for `.js`:
+  - `npx serve` (recommended — correct MIME types out of the box), or
+  - `python -m http.server` **only** if your OS maps `.js` to `text/javascript`; some
+    setups (notably Windows) serve it as `text/plain`, which browsers reject for modules.
+    GitHub Pages / Netlify serve it correctly, so deployment is unaffected.
 - **Demo mode** is the default — eight fictional channels, generated avatars, zero network.
   Pull ×1 / ×10, watch the reveal, build a collection. Everything works offline.
 - **Live mode** pulls real channels. It needs your own free
@@ -95,9 +101,9 @@ it into a tested, modular, deployable project in dependency order (full detail i
 
 - [x] **Prototype** — working single-file build: data seam, pure core, weighted gacha,
       reveal animation, in-memory collection.
-- [ ] **WP0 — Split the monolith.** Break the single file into `src/core.js` (pure),
-      `src/gacha.js`, `src/data/*` (the seam), `src/ui/*`. Zero behavior change. *Blocks
-      everything below.*
+- [x] **WP0 — Split the monolith.** Broke the single file into `src/core.js` (pure),
+      `src/gacha.js`, `src/data/*` (the seam), `src/ui/*`, `src/state.js`, `src/main.js`
+      (wiring). Zero behavior change; `index.html` is now the entry point.
 - [ ] **WP1 — Test suite.** Vitest against the pure core: exact rarity boundaries, hidden /
       malformed subscriber counts, monotonic stat scaling, seeded-RNG gacha distribution.
       *The portfolio centerpiece.*

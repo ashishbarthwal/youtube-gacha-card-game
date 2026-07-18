@@ -57,3 +57,21 @@ same code with different default set + palette, but they are a deploy config, no
 **Opt-out for channel owners.** Real people become cards, so the footer gains a contact
 line and removal requests are honored promptly (policy requires deletion within 7 days for
 user-data requests; we extend the courtesy to set membership).
+
+**WP0 done: monolith split, entry is `index.html`.** `youtube-gacha.html` is deleted; the
+app is ES modules under `src/`, loaded via `<script type="module" src="src/main.js">`.
+Behavior is unchanged (verified: pure-core values match, and demo mode boots to the
+identical 8-chip banner). `toCard` moved into `core.js` (it is pure — the model bridge,
+not a renderer) so `state.js` depends on `core`, never the reverse.
+
+**Two files beyond the planned tree: `src/state.js` and `src/ui/util.js`.** `state.js`
+holds the shared in-memory `state` + `currentPool`/`addToCollection` so `banner`,
+`collection`, and `main` import one owner instead of threading it through every call.
+`ui/util.js` holds `escapeHtml` (used by both `card` and `banner`) rather than coupling
+`banner → card` for a generic helper. `main.js` stays wiring-only; `banner` takes an
+`onPull` callback so it never imports the pull glue.
+
+**Local dev needs a JS-MIME static server, not `file://`.** ES modules are blocked over
+`file://`, and browsers reject module scripts served as `text/plain` (Python's
+`http.server` does this on Windows). `npx serve` is the recommended local server;
+GitHub Pages / Netlify serve correct types, so hosting is unaffected. README updated.
