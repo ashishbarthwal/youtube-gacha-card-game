@@ -4,12 +4,18 @@ Work packages in dependency order. Each is independently shippable. Do not start
 package before its blocker is done. Stop after each package and report, do not chain
 straight through.
 
-Starting point: a working single-file `youtube-gacha.html` (self-contained HTML + CSS + JS)
-containing all features listed in `CLAUDE.md`. Everything below builds on it.
+Starting point was a working single-file `youtube-gacha.html`; everything below built on it.
+
+**Status (2026-07-18): WP0 and WP1 are done** — both tagged (`wp0`, `wp1`) with GitHub
+Releases. The app is ES modules under `src/`; 56 tests run in CI on every push with a
+README badge and self-contained HTML report artifacts. Goal reframed (see CLAUDE.md):
+real users + AI-engineering showcase, so user-facing packages now outrank the original
+order. **Next open decision: deploy demo mode to GitHub Pages now, or build WP4 (card
+sets, no API key needed) first.** WP2 remains pending; the WP3 CSS split note stands.
 
 ---
 
-## WP0 — Split the monolith (blocker for everything)
+## WP0 — Split the monolith (blocker for everything) — ✅ DONE (tag `wp0`)
 
 **Why first:** Vitest cannot import a function out of a `<script>` tag in an HTML file.
 As long as `rarityFromSubs` lives inside `youtube-gacha.html`, the test suite cannot exist.
@@ -54,7 +60,11 @@ reveal animation still runs, nothing regressed.
 
 ---
 
-## WP1 — Test suite (the portfolio artifact)
+## WP1 — Test suite — ✅ DONE (tag `wp1`)
+
+Delivered beyond spec: CI (GitHub Actions, push + manual triggers), README badge,
+JUnit XML + self-contained monolith HTML reports (`npm run test:report`), artifact
+upload and run-page summaries. Dev dependency count: one (Vitest).
 
 **Depends on:** WP0.
 

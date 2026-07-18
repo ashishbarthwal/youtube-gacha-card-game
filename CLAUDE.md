@@ -8,9 +8,16 @@ This is a portfolio piece and fan tribute. Not a business.
 
 ## Owner context
 
-Ash — SDET moving into AI engineering. This repo doubles as a portfolio artifact,
-so **test quality is a first-class feature, not an afterthought**. The pure derivation
-functions exist partly to be tested in public.
+Ash — SDET moving into AI engineering. This repo is a portfolio artifact with two goals,
+in order: **real users actually playing it**, and a **directed-AI-engineering showcase** —
+the visible process (this file, PLAN.md, DECISIONS.md, `wpN` tags + Releases, commit
+messages shaped `WPn: <what and why>`) is itself the exhibit. Keep the receipts honest:
+docs must reflect reality, tags/badges only for what exists.
+
+Tests are the safety net, not the centerpiece (reframed 2026-07-18; WP1 delivered them —
+56 tests, CI on every push, self-contained HTML reports). Ash is learning GitHub Actions
+through this repo: for CI/workflow work, default to guide-and-explain so they type it,
+unless they say otherwise.
 
 ## The core mapping
 
