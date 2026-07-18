@@ -512,6 +512,24 @@
     line-height: 1.6;
   }
 
+  .footer-coffee { margin-top: 12px; }
+
+  .coffee-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+
+  .coffee-link:hover,
+  .coffee-link:focus-visible {
+    color: var(--c-ssr);
+    border-bottom-color: var(--c-ssr);
+  }
+
   @media (max-width: 560px) {
     .pull-row .btn { flex: 1; }
     .reveal-grid { grid-template-columns: repeat(auto-fit, minmax(122px, 138px)); }
@@ -574,6 +592,11 @@
 <footer>
   <p>Fan project. Not affiliated with or endorsed by YouTube or Google. Channel data via the YouTube Data API.
   Your API key lives only in this page's memory: it is never logged, never persisted, and never sent anywhere except googleapis.com.</p>
+  <p class="footer-coffee">
+    <a class="coffee-link" href="https://www.buymeacoffee.com/chunchunmaru" target="_blank" rel="noopener noreferrer">
+      <span aria-hidden="true">☕</span> Buy ChunChunMaru a coffee
+    </a>
+  </p>
 </footer>
 
 <div id="reveal" hidden role="dialog" aria-modal="true" aria-label="Pull results">

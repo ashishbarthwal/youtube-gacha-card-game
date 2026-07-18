@@ -89,6 +89,23 @@ order are exact, reproducible assertions rather than flaky statistics.
 `http.server` does this on Windows). `npx serve` is the recommended local server;
 GitHub Pages / Netlify serve correct types, so hosting is unaffected. README updated.
 
+**WP2 done: coffee link published under `ChunChunMaru`, disclaimer already present.**
+The footer's "not affiliated with YouTube/Google" line predated WP2, so WP2 added only the
+tip jar: a single passive text link to `buymeacoffee.com/chunchunmaru`, coffee-accent
+(SSR gold) on hover, opens in a new tab, wired to nothing in the game. Published under the
+social handle ChunChunMaru rather than the real name, by choice. The hard rule holds — the
+coffee buys Ash a coffee and never unlocks anything in-game. Unlike Wikigacha's CC BY-SA
+line (which grants reuse rights downstream), our footer disclaims a relationship; we have no
+license to grant, so the notice can only ever be a disclaimer, never an attribution.
+
+**Card face stays clean; the export carries the disclaimer (WP5).** Studying Wikigacha's
+card up close: its CC BY-SA line lives on the pack art and page footer, not on the card face.
+We follow the same split but for a different reason — our disclaimer is risk management, not
+an attribution debt, and the risk peaks when a card leaves our page. So the in-app card face
+stays uncluttered (WP3's frame/finish do the work), and the WP5 PNG export stamps a small
+"unofficial fan card · stats as of <month> · not affiliated with YouTube" line into the image
+itself, because the export is the version that travels without page context.
+
 **Test report is a self-contained monolith HTML, rendered from the JUnit XML.**
 `@vitest/ui`'s HTML report was tried and dropped: it is an app (assets folder, gzipped
 metadata, needs a server), and a report should be a document — double-clickable,

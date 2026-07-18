@@ -123,7 +123,7 @@ it into a tested, modular, deployable project in dependency order (full detail i
 - [x] **WP1 — Test suite.** Vitest against the pure core: exact rarity boundaries, hidden /
       malformed subscriber counts, monotonic stat scaling, seeded-RNG gacha distribution.
       56 tests, `npm test`, dev-only dependency.
-- [ ] **WP2 — Footer.** Buy Me a Coffee tip jar (passive, never tied to game state) plus the
+- [x] **WP2 — Footer.** Buy Me a Coffee tip jar (passive, never tied to game state) plus the
       "not affiliated with YouTube/Google" disclaimer.
 - [ ] **WP3 — Holographic cards.** Pointer-tracked tilt + holo shine, intensity gated by
       rarity, with reduced-motion and touch fallbacks.

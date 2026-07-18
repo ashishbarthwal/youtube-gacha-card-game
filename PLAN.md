@@ -95,7 +95,12 @@ interviewers actually open.
 
 ---
 
-## WP2 — Buy Me a Coffee footer + disclaimer
+## WP2 — Buy Me a Coffee footer + disclaimer — ✅ DONE
+
+Disclaimer already shipped in WP0's footer, so WP2 added only the tip jar: a passive text
+link to `buymeacoffee.com/chunchunmaru` (published under the social handle ChunChunMaru),
+SSR-gold on hover, new tab, wired to no game state. See DECISIONS.md for the Wikigacha
+license-asymmetry note and the WP5 "stamp the export, keep the card face clean" decision.
 
 **Depends on:** WP0. Small, do it while the structure is fresh.
 
