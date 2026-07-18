@@ -9,7 +9,6 @@
     "test:report": "node tools/test-report.js"
   },
   "devDependencies": {
-    "@vitest/ui": "^4.1.10",
     "vitest": "^4.1.10"
   }
 }

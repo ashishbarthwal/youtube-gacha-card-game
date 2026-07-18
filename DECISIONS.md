@@ -88,3 +88,11 @@ order are exact, reproducible assertions rather than flaky statistics.
 `file://`, and browsers reject module scripts served as `text/plain` (Python's
 `http.server` does this on Windows). `npx serve` is the recommended local server;
 GitHub Pages / Netlify serve correct types, so hosting is unaffected. README updated.
+
+**Test report is a self-contained monolith HTML, rendered from the JUnit XML.**
+`@vitest/ui`'s HTML report was tried and dropped: it is an app (assets folder, gzipped
+metadata, needs a server), and a report should be a document — double-clickable,
+mailable, archivable. `tools/test-report.js` renders the JUnit XML we already emit into
+one dependency-free HTML file per run, timestamped, failure traces inline. Dev
+dependencies are back down to Vitest alone. The failure path is verified, not assumed:
+a deliberately failing test must render a FAIL report and exit non-zero for CI.
