@@ -104,9 +104,9 @@ it into a tested, modular, deployable project in dependency order (full detail i
 - [x] **WP0 — Split the monolith.** Broke the single file into `src/core.js` (pure),
       `src/gacha.js`, `src/data/*` (the seam), `src/ui/*`, `src/state.js`, `src/main.js`
       (wiring). Zero behavior change; `index.html` is now the entry point.
-- [ ] **WP1 — Test suite.** Vitest against the pure core: exact rarity boundaries, hidden /
+- [x] **WP1 — Test suite.** Vitest against the pure core: exact rarity boundaries, hidden /
       malformed subscriber counts, monotonic stat scaling, seeded-RNG gacha distribution.
-      *The portfolio centerpiece.*
+      56 tests, `npm test`, dev-only dependency.
 - [ ] **WP2 — Footer.** Buy Me a Coffee tip jar (passive, never tied to game state) plus the
       "not affiliated with YouTube/Google" disclaimer.
 - [ ] **WP3 — Holographic cards.** Pointer-tracked tilt + holo shine, intensity gated by

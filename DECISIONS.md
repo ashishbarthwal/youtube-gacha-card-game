@@ -77,6 +77,13 @@ lowercased vanity string ("mkbhd") where the modern format is "@mkbhd". The
 live adapter prepends `@` when missing so the `handle` field always matches the
 Channel typedef and the demo/sets adapters. Empty stays empty.
 
+**WP1 done: 56 tests pin the pure core and the pull engine.** Vitest is the repo's first
+and only dependency, dev-only — the shipped app still has zero. `test/core.test.js` pins
+every rarity boundary from both sides (string and number inputs), the hidden-subs-read-as-N
+rule, junk-input safety, and monotonic/multiplier stat scaling. `test/gacha.test.js` injects
+mulberry32 (a tiny seeded PRNG) so x10 size, dupe stacking, and the N>R>SR>SSR>UR frequency
+order are exact, reproducible assertions rather than flaky statistics.
+
 **Local dev needs a JS-MIME static server, not `file://`.** ES modules are blocked over
 `file://`, and browsers reject module scripts served as `text/plain` (Python's
 `http.server` does this on Windows). `npx serve` is the recommended local server;

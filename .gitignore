@@ -12,5 +12,6 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Test / build output
+# Test / build output — reports are generated on demand, never committed
 coverage/
+reports/
