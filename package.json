@@ -6,9 +6,10 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:report": "vitest run --reporter=default --reporter=junit --outputFile.junit=reports/junit.xml"
+    "test:report": "node tools/test-report.js"
   },
   "devDependencies": {
+    "@vitest/ui": "^4.1.10",
     "vitest": "^4.1.10"
   }
 }

@@ -16,7 +16,19 @@ jobs:
         if: always()
         with:
           name: test-report
-          path: reports/junit.xml
+          path: reports/
+      - name: Job summary
+        if: always()
+        run: |
+          xml=$(ls reports/junit-*.xml 2>/dev/null | head -1)
+          if [ -f "$xml" ]; then
+            tests=$(grep -o 'tests="[0-9]*"' "$xml" | head -1 | grep -o '[0-9]*')
+            fails=$(grep -o 'failures="[0-9]*"' "$xml" | head -1 | grep -o '[0-9]*')
+            echo "### 🧪 $tests tests · $fails failures" >> "$GITHUB_STEP_SUMMARY"
+            echo "Full HTML report: download the **test-report** artifact below, then serve its \`html-*\` folder." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "### ⚠️ No JUnit report was generated" >> "$GITHUB_STEP_SUMMARY"
+          fi
 
 
 
