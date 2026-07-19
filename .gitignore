@@ -5,6 +5,12 @@ node_modules/
 .env
 .env.*
 *.local
+# Local dev convenience: your own key, pre-filled into the Live API field.
+# Matches in any directory; never committed, never shipped.
+config.local.js
+
+# External / working notes (GPT dumps, scratch rationale) — not part of the repo
+external-docs/
 
 # Claude Code personal settings (machine-local, not for the repo)
 .claude/settings.local.json
