@@ -11,6 +11,8 @@ config.local.js
 
 # External / working notes (GPT dumps, scratch rationale) — not part of the repo
 external-docs/
+# Parked research notes — kept locally, out of the repo
+Future/
 
 # Claude Code personal settings (machine-local, not for the repo)
 .claude/settings.local.json

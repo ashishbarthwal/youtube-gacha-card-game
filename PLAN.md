@@ -201,7 +201,8 @@ the target curve (~N 40 / R 30 / SR 18 / SSR 9 / UR 3 %); refresh workflow runs 
 - Card -> PNG export via canvas (enables sharing, which is how Wikigacha spread).
 - localStorage persistence (safe once it is out of the preview sandbox).
 - Battles: ATK vs DEF, two cards, auto-resolved. (If this ever grows toward multiplayer,
-  parked research lives in `Future/MULTIPLAYER.md` — do not start there before WP0/WP1/WP4.)
+  that research is parked in local notes kept out of the repo — do not start there before
+  WP0/WP1/WP4.)
 - README with a screenshot, a live demo link, and a pointer at the test suite.
 
 ---
