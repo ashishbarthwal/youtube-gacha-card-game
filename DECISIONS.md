@@ -113,3 +113,18 @@ mailable, archivable. `tools/test-report.js` renders the JUnit XML we already em
 one dependency-free HTML file per run, timestamped, failure traces inline. Dev
 dependencies are back down to Vitest alone. The failure path is verified, not assumed:
 a deliberately failing test must render a FAIL report and exit non-zero for CI.
+
+**Consume the API's integer fields; never parse a localized subscriber display.** The Data
+API returns counts as locale-free decimal strings (`"21083412"`). The app parses those
+(`core.toCount`) and formats them itself (`ui/util.formatCount` → "21.1M"), so we own the
+presentation instead of inheriting YouTube's. Scraping a channel page would instead force us
+to read *localized display text* — "1.24M subscribers" / "登録者数123万人" / "1,24 Mio.
+Abonnenten" — where the number, the suffix, the separators, and the unit (Japanese 万 = tens
+of thousands) all change by region. That is brittle and locale-dependent to parse, on top of
+the usual scrape fragility (undocumented JSON fields, ambiguous matches — a live scrape of one
+small channel already returned a `… views` number we couldn't confirm was the channel total).
+So `build-set.js` (WP4) fetches creator data via `channels.list`, never by page scraping. The
+HTML scrape used to hand-prototype single cards under `card-prototype/` was a throwaway
+sandbox shortcut, never the pipeline and never the app — the live adapter has always used the
+API. (Localization angle surfaced in a 2026-07 external design review; recorded here so the
+reasoning outlives that conversation.)

@@ -70,6 +70,25 @@ rung is theater (shared reveal, turn timers). Skip unless the drama demands it.
 | Durable Objects / PartyKit | ✓ | live realtime | $0 | ~$5–20/mo |
 | VPS + Colyseus/Nakama | ✓ | live realtime | $5/mo min | scales up |
 
+## Fuller-stack alternative (parked — from a 2026-07 external design review)
+
+The ladder above is deliberately server-light. A heavier, more conventional path was
+proposed separately: a persistent backend where **API usage scales with creators, not
+players** — fetch each creator once, cache it, serve the cache to everyone. Worth recording
+because the day accounts/cross-device persistence become real goals, this is the paved road:
+
+- Read-through cache flow: request creator → cache hit? serve : DB fresh? serve : fetch
+  YouTube API, write DB, warm cache. A background worker refreshes on a schedule.
+- Reference stack + rough cost: Vercel (frontend) · Railway (Node API) · Neon Postgres ·
+  Upstash Redis · Cloudflare CDN — ≈ $5–10/mo.
+
+Note this is the *same architectural property* our static WP4 design already delivers for
+$0: `sets/*.json` = the DB, the CDN = the cache, the monthly GitHub Action = the refresh
+worker. So this stack is a migration target for **game features** (accounts, trades, PvP),
+not for the data problem — that's already solved statically. One correction carried over
+from that review: store only channel **ids** server-side and re-derive stats (per the
+30-day rule), never persist `subscriberCount` in the creator row.
+
 ## Battle sim sketch (whenever it happens)
 
 - Pure function in core: `resolveBattle(deckA, deckB, seed) -> { rounds[], winner }`.
