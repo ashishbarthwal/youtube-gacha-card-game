@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Card prototype — Japan Yuntaku (N)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg0: #150e1f;
+    --ink: #f4effa;
+    --muted: #a795c2;
+    --red: #ff2d55;
+    --blue: #57b0ff;
+    --font-display: 'Anton', 'Arial Narrow', Impact, sans-serif;
+    --font-body: 'Space Grotesk', system-ui, sans-serif;
+    --font-mono: 'Space Mono', ui-monospace, monospace;
+    /* N tier: plain, unadorned. No holo, no glow — the lowest band gets
+       nothing per WP3's plan, so this frame is deliberately flat. */
+    --frame: #4a4560;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-body);
+    color: var(--ink);
+    background: var(--bg0);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 48px 20px;
+  }
+
+  .prototype-head { text-align: center; max-width: 460px; }
+  .prototype-head h1 { font-family: var(--font-display); font-weight: 400; font-size: 20px; }
+  .prototype-head p { color: var(--muted); font-size: 13px; margin-top: 6px; line-height: 1.6; }
+
+  .card {
+    width: 300px;
+    border-radius: 14px;
+    padding: 3px;
+    background: var(--frame);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .card-inner {
+    border-radius: 11px;
+    background: #131a2b;
+    padding: 14px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .rarity-badge {
+    font-family: var(--font-display);
+    font-size: 15px;
+    padding: 4px 8px 3px;
+    border-radius: 6px;
+    color: #0c1524;
+    background: var(--muted);
+  }
+  .card-name { font-size: 14px; font-weight: 700; }
+  .card-handle { font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin-top: 1px; }
+
+  .avatar-wrap { display: grid; place-items: center; padding: 6px 0 14px; }
+  .avatar {
+    width: 132px;
+    height: 132px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--frame);
+    background: #223049;
+  }
+  .avatar.hide { display: none; }
+  .monogram-fallback {
+    display: none;
+    width: 132px; height: 132px;
+    border-radius: 50%;
+    border: 3px solid var(--frame);
+    background: #223049;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display);
+    font-size: 56px;
+    color: rgba(255,255,255,0.5);
+  }
+  .avatar.hide + .monogram-fallback { display: flex; }
+
+  .subs-line {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .subs-line b { color: var(--ink); }
+
+  .stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .stat {
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+    text-align: center;
+  }
+  .stat em { display: block; font-family: var(--font-mono); font-style: normal; font-size: 9px; letter-spacing: 2px; margin-bottom: 2px; }
+  .stat.atk em { color: var(--red); }
+  .stat.def em { color: var(--blue); }
+  .stat b { font-family: var(--font-display); font-weight: 400; font-size: 26px; }
+
+  .caveat {
+    max-width: 460px;
+    font-size: 11.5px;
+    color: var(--muted);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 10px;
+    padding: 12px 14px;
+    line-height: 1.6;
+  }
+  .caveat b { color: var(--ink); }
+
+  footer {
+    max-width: 460px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 11px;
+    line-height: 1.6;
+    border-top: 1px solid rgba(255,255,255,0.09);
+    padding-top: 14px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="prototype-head">
+    <h1>Card prototype — plain (N tier)</h1>
+    <p>Japan Yuntaku, no holo/tilt — practicality pass. Real formula, partly scraped data.</p>
+  </div>
+
+  <div class="card">
+    <div class="card-inner">
+      <div class="card-top">
+        <span class="rarity-badge">N</span>
+        <div>
+          <div class="card-name">Japan Yuntaku</div>
+          <div class="card-handle">@japanyuntaku</div>
+        </div>
+      </div>
+
+      <div class="avatar-wrap">
+        <img class="avatar" id="avatar" alt="Japan Yuntaku channel avatar"
+             src="https://yt3.googleusercontent.com/s-nqFbpBRGFUQtWl1lvq2m30YrOH7lCnnmBfugpyh7Ss6P-R0vLvcPfWCEo_K1SyFNyz4pEZOA=s240-c-k-c0x00ffffff-no-rj">
+        <div class="monogram-fallback" aria-hidden="true">J</div>
+      </div>
+
+      <div class="subs-line">
+        <span><b>7.23K</b> subscribers</span>
+        <span>stats as of Jul 2026</span>
+      </div>
+      <div class="stats">
+        <div class="stat atk"><em>ATK</em><b>681</b></div>
+        <div class="stat def"><em>DEF</em><b>279</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caveat">
+    <b>Data quality note:</b> subs (7.23K) and video count (71) came from the channel
+    page's visible counters. Views (470,449) is a best-effort scrape — I found this
+    number on the page but could not confirm it's the channel-wide total rather than a
+    single video's count. Treat ATK as approximate until verified against the real API.
+  </div>
+
+  <footer>
+    Unofficial fan prototype. Not affiliated with or endorsed by YouTube or Google.
+    Avatar hotlinked directly from Google's servers, unmodified. Design sandbox only.
+  </footer>
+
+<script>
+  document.getElementById('avatar').addEventListener('error', function () {
+    this.classList.add('hide');
+  });
+</script>
+</body>
+</html>
