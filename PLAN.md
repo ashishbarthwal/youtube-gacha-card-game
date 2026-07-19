@@ -6,12 +6,13 @@ straight through.
 
 Starting point was a working single-file `youtube-gacha.html`; everything below built on it.
 
-**Status (2026-07-18): WP0 and WP1 are done** — both tagged (`wp0`, `wp1`) with GitHub
-Releases. The app is ES modules under `src/`; 56 tests run in CI on every push with a
-README badge and self-contained HTML report artifacts. Goal reframed (see CLAUDE.md):
-real users + AI-engineering showcase, so user-facing packages now outrank the original
-order. **Next open decision: deploy demo mode to GitHub Pages now, or build WP4 (card
-sets, no API key needed) first.** WP2 remains pending; the WP3 CSS split note stands.
+**Status (2026-07-19): WP0–WP3 are done.** WP0 and WP1 are tagged (`wp0`, `wp1`) with
+GitHub Releases; WP2 (footer) and WP3 (holographic cards) followed. The app is ES modules
+under `src/`; 56 tests run in CI on every push with a README badge and self-contained HTML
+report artifacts. WP3 also extracted the inline CSS into `styles.css`. Goal reframed (see
+CLAUDE.md): real users + AI-engineering showcase, so user-facing packages now outrank the
+original order. **Next open decision: deploy demo mode to GitHub Pages now, or build WP4
+(card sets, no API key needed) first.**
 
 ---
 
@@ -115,7 +116,21 @@ license-asymmetry note and the WP5 "stamp the export, keep the card face clean" 
 
 ---
 
-## WP3 — Card visual: holographic tilt
+## WP3 — Card visual: holographic tilt — ✅ DONE (grew past the original spec)
+
+Delivered the spec: inline CSS extracted to `styles.css`; a rarity-gated finish (pointer
+glare + masked holo sweep + 3D tilt) driven by three custom properties in one place;
+interactive tilt in `ui/holo.js`, delegated on the Collection grid and scoped away from the
+reveal flip; static fallbacks for touch and `prefers-reduced-motion`. Zero dependencies, no
+build step.
+
+Then went beyond it: a full **card redesign** to a metal-bevel hero card with a **tier system**
+mapped to the YouTube Creator Awards (Graphite/Silver/Gold/Diamond/Red Diamond), sized in
+container-query units; the avatar promoted to a ringed centrepiece (reverses the old
+"inset" guardrail — see CLAUDE.md) with the finish layered below it so real faces aren't
+tinted; UR's flowing sweep replaced by a molten sheen + ember; a **card inspector** (click to
+enlarge); a reveal-layout fix (pinned 5-wide); and a dev-only **Dev Pull**. Full rationale in
+DECISIONS.md.
 
 **Depends on:** WP0. This is the biggest visual payoff per unit of effort.
 

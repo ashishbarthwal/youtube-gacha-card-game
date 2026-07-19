@@ -42,7 +42,11 @@ export async function fetchLiveChannel(resolved, apiKey) {
     id: item.id,
     title: item.snippet?.title ?? 'Untitled channel',
     handle: normalizeHandle(item.snippet?.customUrl),
-    avatarUrl: item.snippet?.thumbnails?.default?.url ?? '',
+    // Prefer the largest thumbnail: the redesigned card shows the avatar in a
+    // big ring, where the 88px "default" would look soft. high=800, medium=240.
+    avatarUrl: item.snippet?.thumbnails?.high?.url
+            ?? item.snippet?.thumbnails?.medium?.url
+            ?? item.snippet?.thumbnails?.default?.url ?? '',
     subscriberCount: stats.subscriberCount,
     hiddenSubscriberCount: Boolean(stats.hiddenSubscriberCount),
     viewCount: stats.viewCount ?? '0',

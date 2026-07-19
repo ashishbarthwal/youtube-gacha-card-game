@@ -49,9 +49,13 @@ Rarity bands: N (<100K) -> R (<1M) -> SR (<10M) -> SSR (<50M) -> UR (50M+)
 Currently out of scope: battles, decks, pity system, `/c/` vanity URL resolution
 (handles and UC ids only), server-side persistence, accounts.
 
-Deliberate constraint: card "art" is a low-res, uncontrolled ~120px avatar. **Lean on the
-frame and the finish, not the art.** Avatar goes in as a small inset. Pull an accent color
-from it. Use the channel initial as a monogram.
+Card look (revised WP3): the metal-bevel **tier frame and the holo/tilt finish carry the
+card** — that principle is unchanged. What changed is the avatar's role. It is no longer a
+small inset; it sits as the centrepiece inside a metal ring. Because a real creator's face is
+now prominent, two rules follow: the live adapter fetches the **highest-res thumbnail
+available (up to 800px)** so it is not soft, and the finish layers are painted **below** the
+avatar so the holo/glare never tint it. Still pull an accent color from the avatar, and keep
+the channel initial as a **faint monogram** behind it.
 
 ## Architecture
 

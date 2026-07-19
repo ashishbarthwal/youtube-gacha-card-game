@@ -128,3 +128,66 @@ HTML scrape used to hand-prototype single cards under `card-prototype/` was a th
 sandbox shortcut, never the pipeline and never the app — the live adapter has always used the
 API. (Localization angle surfaced in a 2026-07 external design review; recorded here so the
 reasoning outlives that conversation.)
+
+**WP3 done: holographic finish gated by rarity, and the CSS is now its own file.**
+`index.html`'s inline `<style>` moved wholesale into `styles.css` (planned split, taken at
+WP3 as the note said, not before). The finish is a pointer-tracked white glare, a masked
+rainbow holo sweep, and a 3D tilt — kept separate from the per-rarity *frame*, which already
+lived in the card rules. Intensity is three custom properties (`--tilt-max`,
+`--glare-strength`, `--holo-strength`) set once per rarity band and read by shared rules, so
+the gating lives in exactly one place: N stays flat/matte (all three zero), R gets a plain
+sheen (glare, no holo), SR/SSR add the holo, UR adds a slow shimmer. Interactive tilt lives
+in `ui/holo.js`, delegated on the persistent Collection grid so it survives the grid's
+innerHTML re-render, and is **scoped to the collection, not the reveal overlay** — a tilt on
+the reveal cards would fight the flip transform. It binds only for a fine pointer with motion
+allowed; touch/coarse and `prefers-reduced-motion` fall back to a faint static finish (or
+nothing for N) in CSS, so a card is never left broken. Still zero app dependencies, still no
+build step. The `card-prototype/` SSR sandbox proved the effect first; the shipped version
+generalizes it across all five bands.
+
+**Rarity tiers ARE the YouTube Creator Awards.** The rarity thresholds (100K / 1M / 10M /
+50M) are exactly the Silver / Gold / Diamond / Custom-("Red Diamond") play-button thresholds,
+so the tiers name themselves: N=Graphite, R=Silver, SR=Gold, SSR=Diamond, UR=Red Diamond.
+This replaced the earlier arbitrary N-grey/R-blue/SR-purple/SSR-gold/UR-red hues with a
+palette that ties the whole look back to YouTube. Each tier is one `--t-*` custom-property set
+(bevel stops, glow, badge ink) so a card recolours by rarity from a single source, and the
+chip dots read the same `--rc`, so chips and cards can never disagree.
+
+**Card redesigned to a bevel-frame hero card (from the `card-prototype/` look).** A conic
+metal-bevel "seam" wraps a dark inner face: rarity badge + tier label top-left, name + handle
+top-right, the avatar as a ringed centrepiece, subs line + ATK/DEF boxes at the bottom, faint
+monogram behind. All internal sizes are **container-query units (`cqw` + `clamp`)**, so one
+markup scales cleanly from the collection grid to the inspector with no per-size overrides.
+
+**Avatar promoted from inset to centrepiece — reverses the old "small inset" guardrail.**
+Recorded in CLAUDE.md. Two consequences: the live adapter now fetches the largest thumbnail
+(high 800px → medium → default) instead of the 88px default, and **the holo/glare finish is
+layered below the avatar** (`.avatar-stage` sits above the finish) so a real creator's face is
+never colour-shifted by the effect. The frame and finish still do the heavy lifting; the
+avatar is protected art, like the clear window on a physical trading card.
+
+**UR's finish is a molten sheen + a smouldering ember, not a flowing colour sweep.** The
+first WP3 pass gave UR a constantly-scrolling rainbow background; it read as distracting and
+made the SSR diamond's rainbow out-shine the top tier. Replaced with: a warm gold→crimson
+holo (distinct from SSR's cool rainbow, so UR doesn't compete on the same axis), a bi-metal
+red+gold bevel, a warm glare, and a slow irregular **ember flicker on the frame glow only**.
+Motion is gated to `prefers-reduced-motion: no-preference`; reduced-motion gets the static
+frame. Interior intensity is deliberately lower than the edge so the centre never overwhelms.
+
+**Card inspector: click a collection card to admire it large.** A centred overlay over a
+blurred backdrop shows one enlarged card with the same tilt/holo enabled (so it can be turned
+in the light). It reuses `renderCard` — the container-query sizing means the big card needs no
+special styling. Closes on button / backdrop / Escape and restores focus. Kept out of the
+reveal overlay, which has its own flip.
+
+**Reveal column count is pinned in JS, not left to `auto-fit`.** A x10 reveal alternated
+between 5-wide and 4-wide because a vertical scrollbar stealing ~17px could reflow the grid,
+and each layout was self-stable. `reveal.js` now sets `--reveal-cols = min(cards, 5)` and the
+grid uses `minmax(0, 148px)` columns, so cards shrink a hair rather than dropping a column —
+the scrollbar can no longer change the count. A x1 is a single centred card.
+
+**Dev Pull is a testing affordance, explicitly not a game mechanic.** A green "Dev Pull"
+button fires a 10-pull seeded with one card of every rarity present in the pool, then filled
+with normal weighted pulls, so every tier's treatment shows in one reveal while tuning
+visuals. It must be gated (`?dev`) or stripped before the real-users build; it never changes
+the published drop rates.

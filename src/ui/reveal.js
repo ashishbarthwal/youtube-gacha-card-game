@@ -16,6 +16,9 @@ export function openReveal(results) {
   revealTimers.forEach(clearTimeout);
   revealTimers = [];
   revealGrid.innerHTML = '';
+  /* Pin the column count so a x10 is always 5-across (2 rows); a scrollbar
+     stealing width can't reflow it to 4. Fewer cards use fewer columns. */
+  revealGrid.style.setProperty('--reveal-cols', Math.min(results.length, 5));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   results.forEach((result, i) => {

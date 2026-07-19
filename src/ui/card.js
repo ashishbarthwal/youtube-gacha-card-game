@@ -65,6 +65,16 @@ function accentFor(channel) {
   return promise;
 }
 
+/* Rarity band → YouTube Creator Award tier name. The bands are literally the
+   play-button subscriber thresholds, so the awards name the tiers. */
+const TIER_NAME = {
+  N:   'Graphite',
+  R:   'Silver',
+  SR:  'Gold',
+  SSR: 'Diamond',
+  UR:  'Red Diamond',
+};
+
 export function renderCard(card, { isNew = false, count = 0 } = {}) {
   const { channel, rarity, atk, def } = card;
   const el = document.createElement('article');
@@ -73,20 +83,34 @@ export function renderCard(card, { isNew = false, count = 0 } = {}) {
   const subsLabel = channel.hiddenSubscriberCount
     ? 'subs hidden'
     : `${formatCount(toCount(channel.subscriberCount))} subs`;
+  const handle = channel.handle ? escapeHtml(channel.handle) : '';
   el.innerHTML = `
-    <div class="card-frame"></div>
-    <div class="monogram" aria-hidden="true">${escapeHtml(initial)}</div>
-    <span class="rarity-badge">${rarity}</span>
-    ${count > 1 ? `<span class="count-badge">×${count}</span>` : ''}
-    ${isNew ? '<span class="new-badge">NEW</span>' : ''}
-    <div class="card-body">
-      <img class="avatar" alt="" src="${escapeHtml(channel.avatarUrl)}">
-      <h3 class="card-name">${escapeHtml(channel.title)}</h3>
-      <p class="card-subs">${escapeHtml(subsLabel)}</p>
-      <div class="card-stats">
-        <span class="stat atk"><em>ATK</em>${atk}</span>
-        <span class="stat def"><em>DEF</em>${def}</span>
+    <div class="card-inner">
+      <div class="monogram" aria-hidden="true">${escapeHtml(initial)}</div>
+      <div class="card-top">
+        <div class="badge-col">
+          <span class="rarity-badge">${rarity}</span>
+          <span class="tier-label" aria-hidden="true">&#9670; ${TIER_NAME[rarity]}</span>
+        </div>
+        <div class="title-wrap">
+          <h3 class="card-name">${escapeHtml(channel.title)}</h3>
+          ${handle ? `<span class="card-handle">${handle}</span>` : ''}
+        </div>
       </div>
+      <div class="avatar-stage">
+        <div class="avatar-ring"><img class="avatar" alt="" src="${escapeHtml(channel.avatarUrl)}"></div>
+        ${count > 1 ? `<span class="count-badge">×${count}</span>` : ''}
+        ${isNew ? '<span class="new-badge">NEW</span>' : ''}
+      </div>
+      <div class="card-bottom">
+        <div class="subs-line"><span>${escapeHtml(subsLabel)}</span></div>
+        <div class="stats">
+          <div class="stat atk"><em>ATK</em><b>${atk}</b></div>
+          <div class="stat def"><em>DEF</em><b>${def}</b></div>
+        </div>
+      </div>
+      <div class="holo" aria-hidden="true"></div>
+      <div class="glare" aria-hidden="true"></div>
     </div>`;
   accentFor(channel).then(color => el.style.setProperty('--accent', color));
   return el;

@@ -18,6 +18,7 @@ const chipsEl = document.getElementById('pool-chips');
 const statusEl = document.getElementById('status');
 const pullBtn1 = document.getElementById('pull-1');
 const pullBtn10 = document.getElementById('pull-10');
+const pullBtnDev = document.getElementById('pull-dev');
 const ratesEl = document.getElementById('rates');
 
 let statusTimer = null;
@@ -49,7 +50,7 @@ function renderPool() {
   if (!pool.length) {
     chipsEl.innerHTML = '<p class="empty">Banner is empty — add a channel above to start pulling.</p>';
   }
-  pullBtn1.disabled = pullBtn10.disabled = !pool.length;
+  pullBtn1.disabled = pullBtn10.disabled = pullBtnDev.disabled = !pool.length;
 }
 
 function setMode(mode) {
@@ -86,7 +87,7 @@ async function onAddChannel() {
   }
 }
 
-export function initBanner({ onPull }) {
+export function initBanner({ onPull, onDevPull }) {
   modeDemoBtn.addEventListener('click', () => setMode('demo'));
   modeLiveBtn.addEventListener('click', () => setMode('live'));
   apiKeyInput.addEventListener('input', () => { state.apiKey = apiKeyInput.value.trim(); });
@@ -94,6 +95,7 @@ export function initBanner({ onPull }) {
   addInput.addEventListener('keydown', e => { if (e.key === 'Enter') onAddChannel(); });
   pullBtn1.addEventListener('click', () => onPull(1));
   pullBtn10.addEventListener('click', () => onPull(10));
+  pullBtnDev.addEventListener('click', () => onDevPull());
 
   chipsEl.addEventListener('click', e => {
     const btn = e.target.closest('.chip-x');

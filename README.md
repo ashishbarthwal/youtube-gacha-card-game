@@ -111,8 +111,8 @@ Vitest is the repo's only dependency, dev-only — the shipped app has none.
 
 ## Roadmap to the end goal
 
-The game currently exists as a single working `youtube-gacha.html` prototype. The plan splits
-it into a tested, modular, deployable project in dependency order (full detail in
+The game began as a single working `youtube-gacha.html` prototype and has since been split
+into a tested, modular, deployable project in dependency order (full detail in
 [`PLAN.md`](PLAN.md), design rationale in [`DECISIONS.md`](DECISIONS.md)):
 
 - [x] **Prototype** — working single-file build: data seam, pure core, weighted gacha,
@@ -125,8 +125,10 @@ it into a tested, modular, deployable project in dependency order (full detail i
       56 tests, `npm test`, dev-only dependency.
 - [x] **WP2 — Footer.** Buy Me a Coffee tip jar (passive, never tied to game state) plus the
       "not affiliated with YouTube/Google" disclaimer.
-- [ ] **WP3 — Holographic cards.** Pointer-tracked tilt + holo shine, intensity gated by
-      rarity, with reduced-motion and touch fallbacks.
+- [x] **WP3 — Holographic cards.** Pointer-tracked tilt + holo shine gated by rarity, with
+      reduced-motion and touch fallbacks. Grew into a full card redesign: metal-bevel frames
+      on a tier system mapped to the YouTube Creator Awards (Silver/Gold/Diamond/Red Diamond),
+      a click-to-enlarge inspector, and the inline CSS split out to `styles.css`.
 - [ ] **WP4 — Card sets.** Curated, versioned channel snapshots shipped as static JSON so
       players never need an API key, plus a build/refresh pipeline and a banner picker.
 - [ ] **WP5 — Extras.** Card→PNG export, localStorage persistence, auto-resolved battles,
