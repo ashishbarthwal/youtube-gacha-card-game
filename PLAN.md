@@ -6,13 +6,15 @@ straight through.
 
 Starting point was a working single-file `youtube-gacha.html`; everything below built on it.
 
-**Status (2026-07-19): WP0–WP3 are done.** WP0 and WP1 are tagged (`wp0`, `wp1`) with
-GitHub Releases; WP2 (footer) and WP3 (holographic cards) followed. The app is ES modules
-under `src/`; 56 tests run in CI on every push with a README badge and self-contained HTML
-report artifacts. WP3 also extracted the inline CSS into `styles.css`. Goal reframed (see
-CLAUDE.md): real users + AI-engineering showcase, so user-facing packages now outrank the
-original order. **Next open decision: deploy demo mode to GitHub Pages now, or build WP4
-(card sets, no API key needed) first.**
+**Status (2026-07-20): WP0–WP3 done; WP4 app-side landed.** WP0 and WP1 are tagged (`wp0`,
+`wp1`) with GitHub Releases; WP2 (footer) and WP3 (holographic cards) followed. WP4's
+**app-side half** is now in: a sets adapter behind the seam (`src/data/sets.js`), a
+`sets/index.json` manifest, a fictional `sample-series.json`, and a **Sets** banner mode with
+a set picker — pulling from curated static JSON with no API key. 64 tests run in CI on every
+push with a README badge and self-contained HTML report artifacts. Goal reframed (see
+CLAUDE.md): real users + AI-engineering showcase. **Deploy is deliberately deferred** — the app
+is still undercooked. **Next: `tools/build-set.js`, gated on the YouTube API storage / likeness
+questions being clarified with Google before it points at real channels.**
 
 ---
 
@@ -158,10 +160,17 @@ initial as a monogram.
 
 ---
 
-## WP4 — Card sets: snapshot pipeline + banner picker
+## WP4 — Card sets: snapshot pipeline + banner picker — 🟡 IN PROGRESS (app-side done)
 
 **Depends on:** WP0. Direction settled 2026-07: players pull from curated, versioned card
 sets and never need an API key (see DECISIONS.md). Two halves, one WP.
+
+**Status (2026-07-20):** the app-side half below is built — `src/data/sets.js` (adapter, 8
+tests), a `sets/index.json` manifest, a fictional `sets/sample-series.json`, and a **Sets**
+banner mode with a set picker (added as a third mode alongside Demo/Live). The dev-side
+pipeline (`build-set.js`) is not started; it waits on the YouTube API storage / likeness
+questions being clarified before it points at real channels, so no real creator data is
+committed yet.
 
 **Dev-side pipeline (never shipped to players):**
 - `tools/build-set.js` — Node script, zero dependencies. Input: a curated handle/UC-id list
@@ -171,6 +180,8 @@ sets and never need an API key (see DECISIONS.md). Two halves, one WP.
 - Runs with Ash's API key from an env var, locally or in CI. The key never enters the repo.
 - Monthly GitHub Action re-snapshots every set: YouTube's Developer Policies require stored
   statistics to be refreshed or deleted within 30 days. Each refresh is a new "printing".
+- Refresh must handle a dead UC id (deleted/terminated channel — a 404 on re-fetch): drop or
+  flag it, never ship a broken card.
 
 **App-side (shipped):**
 - `src/data/sets.js` — third adapter behind the seam. Loads a set JSON, emits the exact same

@@ -11,11 +11,23 @@ export const state = {
   apiKey: '',                                  // memory only, by design
   demoPool: DEMO_CHANNELS.map(toCard),
   livePool: [],
+  setsPool: [],
+  currentSet: null,                            // { slug, title, snapshotDate } once loaded
   collection: new Map(),                       // channel id -> { card, count }
 };
 
 export function currentPool() {
-  return state.mode === 'demo' ? state.demoPool : state.livePool;
+  if (state.mode === 'live') return state.livePool;
+  if (state.mode === 'sets') return state.setsPool;
+  return state.demoPool;
+}
+
+/* Load a parsed set (from data/sets.parseSet) as the active sets pool. Channels
+   become cards through the same pure bridge as demo, so nothing downstream can
+   tell a set from demo or live. */
+export function setSetsPool(set) {
+  state.setsPool = set.channels.map(toCard);
+  state.currentSet = { slug: set.slug, title: set.title, snapshotDate: set.snapshotDate };
 }
 
 export function addToCollection(card) {

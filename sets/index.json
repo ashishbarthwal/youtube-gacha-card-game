@@ -1,0 +1,9 @@
+{
+  "sets": [
+    {
+      "slug": "sample-series",
+      "title": "Sample Series — Arcade Legends",
+      "file": "sets/sample-series.json"
+    }
+  ]
+}

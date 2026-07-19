@@ -199,3 +199,32 @@ app. Each was single-use: the scrapes gave stat numbers for hand-prototyping (ne
 pipeline — the live adapter always used the API), the prototypes proved the frame/finish look
 (now generalized across all five bands in WP3). References to them in the entries above are
 historical. Removing them shrinks the repo and drops the committed third-party HTML.
+
+**WP4 app-side: card sets are a third adapter behind the seam, surfaced as a "Sets" banner
+mode.** `data/sets.js` splits like the rest of the codebase — `parseSet` is pure and validated
+(8 new tests), `loadSet` is the thin fetch wrapper. A set is the envelope
+`{ slug, title, series, snapshotDate, channels[] }`; every channel is the exact Channel shape
+demo/live emit, so the gacha, reveal, render and collection code took **zero** changes to
+consume a set — the seam's whole point, demonstrated. Sets appear as a **third mode
+(Demo | Sets | Live)** rather than folding demo into a set-picker: the smaller, incremental
+change, chosen over the earlier "demo becomes the starter set" reframing (which stays open for
+later). The picker is populated from a `sets/index.json` manifest that `build-set.js` will
+maintain.
+
+**The first set ships with fictional channels, not real creators.** `sets/sample-series.json`
+("Arcade Legends") is eight invented channels spanning every rarity (N→UR). It proves the
+adapter, picker, and rarity spread without committing any real creator metadata while the
+YouTube API storage / likeness questions are still being clarified with Google. `build-set.js`
+will emit the identical shape from real channels once that clears — no app code changes. Sets
+are keyed on the immutable UC id (handle is display-only), so a set is handle-change-proof and
+self-heals its display fields on each monthly re-snapshot; a UC id that 404s on refresh
+(deleted/terminated channel) must be dropped or flagged, never shipped as a broken card.
+
+**Local-dev API-key convenience: a gitignored `config.local.js`.** So live mode needn't have
+the key re-pasted on every reload, `banner.js` dynamically imports `config.local.js` and
+pre-fills the field if it exports `YOUTUBE_API_KEY`. The import rejects harmlessly when the
+file is absent — which is every deployment, so the shipped app still has no key and no such
+file, and the memory-only guarantee to players holds. The file is gitignored via an explicit
+`config.local.js` entry (its name doesn't match the pre-existing `*.local` rule). Working and
+rationale notes (external LLM dumps, the static-sets-vs-backend case) live in a gitignored
+`external-docs/` and are deliberately not part of the repo.

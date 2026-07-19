@@ -65,10 +65,11 @@ Add channels by `@handle`, channel URL, or `UC…` id. (Vanity `/c/` URLs aren't
 
 Two structural ideas do the heavy lifting:
 
-**The data seam.** `demo`, `sets` (curated JSON snapshots — planned), and `live` sources all
-produce an *identical* channel object shape, so nothing downstream can tell them apart. This
-is why the app runs offline, why tests never need an API key, and why demo mode is a real
-adapter rather than a hack.
+**The data seam.** `demo`, `sets` (curated JSON snapshots), and `live` sources all produce an
+*identical* channel object shape, so nothing downstream can tell them apart. This is why the
+app runs offline, why tests never need an API key, and why demo mode is a real adapter rather
+than a hack. Adding the `sets` source needed no changes to the gacha, reveal, render, or
+collection code — it's just another pool behind the seam.
 
 **The pure core.** `rarityFromSubs` and `statsFrom` are pure and deterministic — no I/O, no
 randomness, no DOM. They sit between the data seam and everything stateful, which makes them
@@ -95,10 +96,11 @@ Vanilla JS, ES modules, no framework, no bundler. Fonts: Anton / Space Grotesk /
 
 ### Tests
 
-56 Vitest tests pin the pure core — every rarity boundary from both sides, hidden and
-malformed subscriber counts, monotonic stat scaling — and the gacha engine under a seeded
-RNG, so the drop-rate distribution is an exact assertion. CI runs them on every push
-(that's the badge above); each run uploads a self-contained HTML report as an artifact.
+64 Vitest tests pin the pure core — every rarity boundary from both sides, hidden and
+malformed subscriber counts, monotonic stat scaling — the gacha engine under a seeded RNG (so
+the drop-rate distribution is an exact assertion), and the card-set adapter's validation. CI
+runs them on every push (that's the badge above); each run uploads a self-contained HTML
+report as an artifact.
 
 ```
 npm test              # run the suite
@@ -129,8 +131,10 @@ into a tested, modular, deployable project in dependency order (full detail in
       reduced-motion and touch fallbacks. Grew into a full card redesign: metal-bevel frames
       on a tier system mapped to the YouTube Creator Awards (Silver/Gold/Diamond/Red Diamond),
       a click-to-enlarge inspector, and the inline CSS split out to `styles.css`.
-- [ ] **WP4 — Card sets.** Curated, versioned channel snapshots shipped as static JSON so
-      players never need an API key, plus a build/refresh pipeline and a banner picker.
+- [~] **WP4 — Card sets.** *App-side landed:* a sets adapter behind the seam, a
+      `sets/index.json` manifest, and a **Sets** banner mode that pulls from curated static JSON
+      with no API key (sample set ships fictional channels for now). *Pending:* the
+      `build-set.js` snapshot/refresh pipeline that mints real sets.
 - [ ] **WP5 — Extras.** Card→PNG export, localStorage persistence, auto-resolved battles,
       and a polished README with a live demo link.
 

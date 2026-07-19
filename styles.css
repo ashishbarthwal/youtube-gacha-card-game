@@ -141,6 +141,11 @@
   .add-row { display: flex; gap: 10px; }
   .add-row .field { flex: 1; }
 
+  #sets-controls { display: grid; gap: 8px; margin-bottom: 14px; }
+  #sets-controls[hidden] { display: none; }
+  #set-select { cursor: pointer; }
+  #set-meta { font-family: var(--font-mono); }
+
   /* buttons */
   .btn {
     font-family: var(--font-body);

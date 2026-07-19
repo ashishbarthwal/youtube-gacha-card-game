@@ -4,12 +4,16 @@
    the pull buttons call onPull(count) so main stays the composition root. */
 
 import { RARITY, RARITY_ORDER, toCard } from '../core.js';
-import { state, currentPool } from '../state.js';
-import { resolveChannelInput, fetchLiveChannel } from '../data/index.js';
+import { state, currentPool, setSetsPool } from '../state.js';
+import { resolveChannelInput, fetchLiveChannel, loadSet } from '../data/index.js';
 import { escapeHtml } from './util.js';
 
 const modeDemoBtn = document.getElementById('mode-demo');
+const modeSetsBtn = document.getElementById('mode-sets');
 const modeLiveBtn = document.getElementById('mode-live');
+const setsControls = document.getElementById('sets-controls');
+const setSelect = document.getElementById('set-select');
+const setMeta = document.getElementById('set-meta');
 const liveControls = document.getElementById('live-controls');
 const apiKeyInput = document.getElementById('api-key');
 const addInput = document.getElementById('add-input');
@@ -48,7 +52,10 @@ function renderPool() {
     chipsEl.appendChild(chip);
   }
   if (!pool.length) {
-    chipsEl.innerHTML = '<p class="empty">Banner is empty — add a channel above to start pulling.</p>';
+    const msg = state.mode === 'live'
+      ? 'Banner is empty — add a channel above to start pulling.'
+      : state.mode === 'sets' ? 'Loading set…' : 'Banner is empty.';
+    chipsEl.innerHTML = `<p class="empty">${msg}</p>`;
   }
   pullBtn1.disabled = pullBtn10.disabled = pullBtnDev.disabled = !pool.length;
 }
@@ -56,9 +63,49 @@ function renderPool() {
 function setMode(mode) {
   state.mode = mode;
   modeDemoBtn.classList.toggle('active', mode === 'demo');
+  modeSetsBtn.classList.toggle('active', mode === 'sets');
   modeLiveBtn.classList.toggle('active', mode === 'live');
   liveControls.hidden = mode !== 'live';
+  setsControls.hidden = mode !== 'sets';
   showStatus('');
+  if (mode === 'sets') ensureSetsIndex();
+  renderPool();
+}
+
+/* The set picker is populated once from the sets manifest, then the selected
+   set is fetched and parsed through the seam. Both are static-file fetches —
+   no key, no live API. */
+let setsIndexLoaded = false;
+
+async function ensureSetsIndex() {
+  if (setsIndexLoaded) return;
+  try {
+    const res = await fetch('sets/index.json');
+    if (!res.ok) throw new Error();
+    const { sets } = await res.json();
+    setSelect.innerHTML = (sets ?? [])
+      .map(s => `<option value="${escapeHtml(s.file)}">${escapeHtml(s.title)}</option>`)
+      .join('');
+    setsIndexLoaded = true;
+    await loadSelectedSet();
+  } catch {
+    showStatus('Could not load the set list.', true);
+  }
+}
+
+async function loadSelectedSet() {
+  const file = setSelect.value;
+  if (!file) return;
+  showStatus('Loading set…');
+  try {
+    const set = await loadSet(file);
+    setSetsPool(set);
+    setMeta.textContent = set.snapshotDate ? `Stats as of ${set.snapshotDate}` : '';
+    showStatus('');
+  } catch (err) {
+    setMeta.textContent = '';
+    showStatus(err.message, true);
+  }
   renderPool();
 }
 
@@ -89,7 +136,9 @@ async function onAddChannel() {
 
 export function initBanner({ onPull, onDevPull }) {
   modeDemoBtn.addEventListener('click', () => setMode('demo'));
+  modeSetsBtn.addEventListener('click', () => setMode('sets'));
   modeLiveBtn.addEventListener('click', () => setMode('live'));
+  setSelect.addEventListener('change', loadSelectedSet);
   apiKeyInput.addEventListener('input', () => { state.apiKey = apiKeyInput.value.trim(); });
   addBtn.addEventListener('click', onAddChannel);
   addInput.addEventListener('keydown', e => { if (e.key === 'Enter') onAddChannel(); });
@@ -107,4 +156,17 @@ export function initBanner({ onPull, onDevPull }) {
   ratesEl.textContent =
     'Pull weights per channel — ' + RARITY_ORDER.map(r => `${r} ${RARITY[r].weight}`).join(' · ');
   setMode('demo');
+
+  /* Local dev convenience: if a gitignored src/config.local.js exists and
+     exports a YOUTUBE_API_KEY, pre-fill the Live API field so testing live
+     mode needs no re-paste. The file never ships (see .gitignore), so the
+     dynamic import simply rejects — and is ignored — everywhere else. */
+  import('../config.local.js')
+    .then(({ YOUTUBE_API_KEY }) => {
+      const key = String(YOUTUBE_API_KEY ?? '').trim();
+      if (!key) return;
+      apiKeyInput.value = key;
+      state.apiKey = key;
+    })
+    .catch(() => { /* no local config — the normal case */ });
 }
