@@ -191,3 +191,11 @@ button fires a 10-pull seeded with one card of every rarity present in the pool,
 with normal weighted pulls, so every tier's treatment shows in one reveal while tuning
 visuals. It must be gated (`?dev`) or stripped before the real-users build; it never changes
 the published drop rates.
+
+**Throwaway HTML sandboxes removed.** The scraped YouTube page dumps (`mkbhd.html`,
+`yuntaku.html`, `yuntaku-about.html` — ~5 MB of third-party page source at the repo root) and
+the hand-built `card-prototype/` mock-ups are deleted now that the real cards render in the
+app. Each was single-use: the scrapes gave stat numbers for hand-prototyping (never the
+pipeline — the live adapter always used the API), the prototypes proved the frame/finish look
+(now generalized across all five bands in WP3). References to them in the entries above are
+historical. Removing them shrinks the repo and drops the committed third-party HTML.
