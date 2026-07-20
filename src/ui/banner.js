@@ -5,10 +5,14 @@
 
 import { RARITY, RARITY_ORDER, toCard } from '../core.js';
 import { state, currentPool, setSetsPool } from '../state.js';
-import { resolveChannelInput, fetchLiveChannel, loadSet } from '../data/index.js';
+import { resolveChannelInput, fetchLiveChannel, loadSet, parseSet, STARTER_SET } from '../data/index.js';
 import { escapeHtml } from './util.js';
 
-const modeDemoBtn = document.getElementById('mode-demo');
+/* The bundled starter set is offered as the first, always-present option. Its
+   picker value is this sentinel (real sets use their file path), so selecting
+   it skips the fetch and loads from memory. */
+const STARTER_VALUE = '@starter';
+
 const modeSetsBtn = document.getElementById('mode-sets');
 const modeLiveBtn = document.getElementById('mode-live');
 const setsControls = document.getElementById('sets-controls');
@@ -54,7 +58,7 @@ function renderPool() {
   if (!pool.length) {
     const msg = state.mode === 'live'
       ? 'Banner is empty — add a channel above to start pulling.'
-      : state.mode === 'sets' ? 'Loading set…' : 'Banner is empty.';
+      : 'Loading set…';
     chipsEl.innerHTML = `<p class="empty">${msg}</p>`;
   }
   pullBtn1.disabled = pullBtn10.disabled = pullBtnDev.disabled = !pool.length;
@@ -62,43 +66,63 @@ function renderPool() {
 
 function setMode(mode) {
   state.mode = mode;
-  modeDemoBtn.classList.toggle('active', mode === 'demo');
   modeSetsBtn.classList.toggle('active', mode === 'sets');
   modeLiveBtn.classList.toggle('active', mode === 'live');
   liveControls.hidden = mode !== 'live';
   setsControls.hidden = mode !== 'sets';
   showStatus('');
-  if (mode === 'sets') ensureSetsIndex();
+  if (mode === 'sets') ensureSets();
   renderPool();
 }
 
-/* The set picker is populated once from the sets manifest, then the selected
-   set is fetched and parsed through the seam. Both are static-file fetches —
-   no key, no live API. */
-let setsIndexLoaded = false;
+/* The picker is seeded once: the bundled starter set goes in first and loads
+   synchronously (no fetch, so the default view paints instantly and still works
+   offline), then the fetchable-set manifest is appended when it arrives. If
+   that fetch fails, the starter set is untouched and remains pullable. */
+let setsSeeded = false;
 
-async function ensureSetsIndex() {
-  if (setsIndexLoaded) return;
+function ensureSets() {
+  if (setsSeeded) return;
+  setsSeeded = true;
+  const opt = document.createElement('option');
+  opt.value = STARTER_VALUE;
+  opt.textContent = STARTER_SET.title;
+  setSelect.appendChild(opt);
+  selectStarter();          // synchronous: setsPool is ready before renderPool runs
+  appendManifestSets();     // async: offer the fetchable sets once loaded
+}
+
+/* Load the bundled starter set from memory, through the same parseSet → toCard
+   path a fetched set uses. No snapshot label — the starter set isn't dated. */
+function selectStarter() {
+  setSetsPool(parseSet(STARTER_SET));
+  setMeta.textContent = '';
+  renderPool();
+}
+
+async function appendManifestSets() {
   try {
     const res = await fetch('sets/index.json');
     if (!res.ok) throw new Error();
     const { sets } = await res.json();
-    setSelect.innerHTML = (sets ?? [])
-      .map(s => `<option value="${escapeHtml(s.file)}">${escapeHtml(s.title)}</option>`)
-      .join('');
-    setsIndexLoaded = true;
-    await loadSelectedSet();
+    for (const s of sets ?? []) {
+      const opt = document.createElement('option');
+      opt.value = s.file;
+      opt.textContent = s.title;
+      setSelect.appendChild(opt);
+    }
   } catch {
-    showStatus('Could not load the set list.', true);
+    // The starter set still works; the extra sets just aren't offered.
+    showStatus('Could not load the additional set list.', true);
   }
 }
 
 async function loadSelectedSet() {
-  const file = setSelect.value;
-  if (!file) return;
+  const value = setSelect.value;
+  if (value === STARTER_VALUE) return selectStarter();
   showStatus('Loading set…');
   try {
-    const set = await loadSet(file);
+    const set = await loadSet(value);
     setSetsPool(set);
     setMeta.textContent = set.snapshotDate ? `Stats as of ${set.snapshotDate}` : '';
     showStatus('');
@@ -135,7 +159,6 @@ async function onAddChannel() {
 }
 
 export function initBanner({ onPull, onDevPull }) {
-  modeDemoBtn.addEventListener('click', () => setMode('demo'));
   modeSetsBtn.addEventListener('click', () => setMode('sets'));
   modeLiveBtn.addEventListener('click', () => setMode('live'));
   setSelect.addEventListener('change', loadSelectedSet);
@@ -155,7 +178,7 @@ export function initBanner({ onPull, onDevPull }) {
 
   ratesEl.textContent =
     'Pull weights per channel — ' + RARITY_ORDER.map(r => `${r} ${RARITY[r].weight}`).join(' · ');
-  setMode('demo');
+  setMode('sets');
 
   /* Local dev convenience: if a gitignored src/config.local.js exists and
      exports a YOUTUBE_API_KEY, pre-fill the Live API field so testing live

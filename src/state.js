@@ -4,27 +4,23 @@
    else. */
 
 import { toCard } from './core.js';
-import { DEMO_CHANNELS } from './data/index.js';
 
 export const state = {
-  mode: 'demo',
+  mode: 'sets',                                // Sets is the default; Live is opt-in
   apiKey: '',                                  // memory only, by design
-  demoPool: DEMO_CHANNELS.map(toCard),
   livePool: [],
-  setsPool: [],
+  setsPool: [],                                // filled with the starter set on init
   currentSet: null,                            // { slug, title, snapshotDate } once loaded
   collection: new Map(),                       // channel id -> { card, count }
 };
 
 export function currentPool() {
-  if (state.mode === 'live') return state.livePool;
-  if (state.mode === 'sets') return state.setsPool;
-  return state.demoPool;
+  return state.mode === 'live' ? state.livePool : state.setsPool;
 }
 
 /* Load a parsed set (from data/sets.parseSet) as the active sets pool. Channels
-   become cards through the same pure bridge as demo, so nothing downstream can
-   tell a set from demo or live. */
+   become cards through the same pure bridge as live, so nothing downstream can
+   tell the bundled starter set, a fetched set, and live apart. */
 export function setSetsPool(set) {
   state.setsPool = set.channels.map(toCard);
   state.currentSet = { slug: set.slug, title: set.title, snapshotDate: set.snapshotDate };

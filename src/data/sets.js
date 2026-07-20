@@ -1,7 +1,8 @@
 /* data/sets — the third adapter behind the seam (WP4). Loads a curated,
    versioned card set (static JSON) and hands back channels in the exact same
-   Channel shape as demo and live, so the gacha engine and renderer can't tell
-   the source apart. No key, no live API call: a set is pre-baked at build time
+   Channel shape as the bundled starter set and live, so the gacha engine and
+   renderer can't tell the source apart. No key, no live API call: a set is
+   pre-baked at build time
    (tools/build-set.js, planned) and refreshed monthly.
 
    Split like the rest of the codebase: parseSet is pure and validated — the
@@ -12,7 +13,8 @@
    <month>" from it. */
 
 /* Pure: validate a parsed set object and normalize every channel to the
-   Channel shape (counts as strings, exactly as demo/live emit them). Throws a
+   Channel shape (counts as strings, exactly as the starter set and live emit
+   them). Throws a
    readable error rather than shipping a half-built set. */
 export function parseSet(raw) {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) {

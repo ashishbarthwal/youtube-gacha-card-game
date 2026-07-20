@@ -1,7 +1,8 @@
-/* data — the seam. demo, sets, and live sources all produce this identical
-   Channel shape, so nothing downstream can tell them apart. That is why the
-   app runs offline, why tests never need an API key, and why demo mode is a
-   real adapter rather than a hack.
+/* data — the seam. The bundled starter set, fetched sets, and the live API all
+   produce this identical Channel shape, so nothing downstream can tell them
+   apart. That is why the app runs offline (the starter set is bundled, not
+   fetched), why tests never need an API key, and why the starter set is a real
+   set behind the seam rather than a hack.
 
    @typedef {Object} Channel
    @property {string}  id                     UC… channel id
@@ -14,7 +15,7 @@
    @property {string}  videoCount             decimal string
  */
 
-export { DEMO_CHANNELS } from './demo.js';
+export { STARTER_SET } from './starter.js';
 export { fetchLiveChannel } from './youtube.js';
 export { resolveChannelInput } from './resolve.js';
 export { loadSet, parseSet } from './sets.js';

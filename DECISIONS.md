@@ -211,6 +211,22 @@ change, chosen over the earlier "demo becomes the starter set" reframing (which 
 later). The picker is populated from a `sets/index.json` manifest that `build-set.js` will
 maintain.
 
+**Demo folded into a bundled starter set; two modes remain (Sets | Live).** This closes the
+"demo becomes the starter set" fork left open above. The eight demo channels moved verbatim
+(including the hidden-subscriber edge case) into `src/data/starter.js` as a real set envelope
+`{ slug, title, series, snapshotDate, channels[] }`, so they now flow through the same
+`parseSet → toCard` path a fetched set uses — the starter set is genuinely a set behind the
+seam, not a special case. The standalone "Demo" mode/button is gone; the banner is now **Sets
+(default) | Live**. The starter set is the picker's first, always-present option and loads
+**synchronously from the JS bundle** (no fetch): the default view still paints instantly with
+no loading flash, and it stays offline-capable and works as the fallback pool if the
+`sets/index.json` manifest fetch fails. The hidden-subs channel that used to double as demo's
+eyeball fixture is now pinned by two tests against `STARTER_SET` (64 → 66 tests). Chosen over a
+hard delete of demo, which would have dropped the offline fallback and the "app runs offline"
+receipt for the sake of ~100 fewer lines. Starter-set channel ids carry no snapshot label
+(they aren't a dated snapshot), which visually distinguishes the built-in sampler from a real,
+dated Series.
+
 **The first set ships with fictional channels, not real creators.** `sets/sample-series.json`
 ("Arcade Legends") is eight invented channels spanning every rarity (N→UR). It proves the
 adapter, picker, and rarity spread without committing any real creator metadata while the

@@ -1,7 +1,8 @@
 /* ui/card — card markup + render, plus the per-channel accent logic.
-   Remember the constraint: the avatar is a low-res uncontrolled 120px
-   image. The frame and finish carry the look; the avatar is a small inset,
-   the accent is sampled from it, the channel initial is a monogram. */
+   The frame and finish carry the look. WP3 promoted the avatar from a small
+   inset to a ringed centrepiece (the finish is layered *below* it so a real
+   face is never colour-shifted); the accent is still sampled from the avatar,
+   and the channel initial sits behind it as a faint monogram. */
 
 import { toCount } from '../core.js';
 import { escapeHtml, formatCount } from './util.js';

@@ -61,10 +61,14 @@ the channel initial as a **faint monogram** behind it.
 
 Two things matter structurally:
 
-**The data seam.** `demo`, `sets` (curated snapshot JSON), and `live` sources produce an
-identical channel object shape, so nothing downstream can tell them apart. This is why the
-app works offline, why the tests never need an API key, why demo mode is not a hack but a
-real adapter, and why versioned card sets ship as plain static files.
+**The data seam.** The bundled **starter set**, fetched **sets** (curated snapshot JSON),
+and **live** sources produce an identical channel object shape, so nothing downstream can
+tell them apart. This is why the app works offline (the starter set is bundled, not
+fetched), why the tests never need an API key, why the starter set is a real set behind the
+seam rather than a hack, and why versioned card sets ship as plain static files. There are
+two user-facing modes — **Sets** (default; starter set + any fetched sets in a picker) and
+**Live** (bring-your-own-key). The old standalone "Demo" mode was folded into the starter
+set (see DECISIONS.md).
 
 **The pure core.** `rarityFromSubs` and `statsFrom` are pure and deterministic — no I/O,
 no randomness, no DOM. They sit between the seam and everything stateful. This is the
@@ -75,11 +79,12 @@ input (@handle | URL | UC id)
         |
    resolve to channelId
         |
-   +----+----+---------+      <- the seam
-   |         |         |
- demo   sets (JSON)  live (YouTube Data API v3)
-   |         |         |
-   +----+----+---------+
+   +------------+------------+---------+      <- the seam
+   |            |            |
+ starter set  sets (JSON)  live (YouTube Data API v3)
+ (bundled)    (fetched)    (user key)
+   |            |            |
+   +------------+------------+---------+
         |
   derivation core (PURE)  <- rarityFromSubs, statsFrom
         |

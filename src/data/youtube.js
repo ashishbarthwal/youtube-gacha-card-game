@@ -1,5 +1,5 @@
 /* data/youtube — live adapter for YouTube Data API v3.
-   Returns the same Channel shape as demo (see ./index.js). The key is a
+   Returns the same Channel shape as the other sources (see ./index.js). The key is a
    plain argument: never logged, never persisted, only ever sent to
    googleapis.com. */
 
@@ -8,7 +8,7 @@ const YT_ENDPOINT = 'https://www.googleapis.com/youtube/v3/channels';
 /* customUrl is the API's handle field, but it is not guaranteed to be
    handle-shaped: older channels return a bare, lowercased vanity string
    ("mkbhd") while the modern format is "@mkbhd". Normalize to the "@name"
-   shape the Channel typedef promises, so live matches demo and sets. */
+   shape the Channel typedef promises, so live matches the starter set and sets. */
 function normalizeHandle(customUrl) {
   const raw = String(customUrl ?? '').trim();
   if (!raw) return '';

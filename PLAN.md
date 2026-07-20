@@ -165,9 +165,12 @@ initial as a monogram.
 **Depends on:** WP0. Direction settled 2026-07: players pull from curated, versioned card
 sets and never need an API key (see DECISIONS.md). Two halves, one WP.
 
-**Status (2026-07-20):** the app-side half below is built — `src/data/sets.js` (adapter, 8
-tests), a `sets/index.json` manifest, a fictional `sets/sample-series.json`, and a **Sets**
-banner mode with a set picker (added as a third mode alongside Demo/Live). The dev-side
+**Status (2026-07-20):** the app-side half below is built — `src/data/sets.js` (adapter), a
+`sets/index.json` manifest, a fictional `sets/sample-series.json`, and a **Sets** banner mode
+with a set picker. The old standalone Demo mode was then **folded into a bundled starter set**
+(`src/data/starter.js`), so the banner is now two modes, **Sets (default) | Live**, and the
+starter set is the picker's first, always-present option (loaded from the JS bundle, so the
+default view paints instantly and works offline; see DECISIONS.md). 66 tests. The dev-side
 pipeline (`build-set.js`) is not started; it waits on the YouTube API storage / likeness
 questions being clarified before it points at real channels, so no real creator data is
 committed yet.
@@ -184,12 +187,13 @@ committed yet.
   flag it, never ship a broken card.
 
 **App-side (shipped):**
-- `src/data/sets.js` — third adapter behind the seam. Loads a set JSON, emits the exact same
-  Channel shape as demo/live; nothing downstream can tell.
+- `src/data/sets.js` — the set adapter behind the seam. Loads a set JSON, emits the exact same
+  Channel shape as the starter set/live; nothing downstream can tell.
 - Set JSON shape: `{ slug, title, series, snapshotDate, channels[] }`. Cards display
   "stats as of <month>" (stored data must be presented in its time context).
-- Banner picker UI: choose among available sets. Demo becomes the built-in starter set.
-- Footer gains an opt-out/contact line for channel owners who want out of a set.
+- Banner picker UI: choose among available sets. The bundled starter set (`src/data/starter.js`)
+  is the default option; Demo mode was folded into it (see DECISIONS.md).
+- Footer gains an opt-out/contact line for channel owners who want out of a set. *(still TODO)*
 
 **Acceptance:** pulling from a set works with no API key; Series 1 rarity mix roughly matches
 the target curve (~N 40 / R 30 / SR 18 / SSR 9 / UR 3 %); refresh workflow runs green.
